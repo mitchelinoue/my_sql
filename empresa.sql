@@ -105,8 +105,19 @@ WHERE idDepartamento = 3; -- não funciona se existirem empregados associados ao
 -- create table (PK = primary key, FK = foreign key); insert into, update; delete; select;
 
 -- DESAFIO 1: Criar uma tabela endereco (uf, cidade, cep, rua, numero) que esta relacionada ao empregado (1:1)
--- DESAFIO 2: Criar uma tabela projeto (nome, prazo, orcamento, descricao). N:N (Gera uma tabela relacionamento)
 
+CREATE TABLE endereco(
+	idEndereco INTEGER PRIMARY KEY AUTO_INCREMENT,
+	uf CHAR(2) NOT NULL,
+	cidade VARCHAR(30) NOT NULL,
+	cep VARCHAR(30) NOT NULL,
+	rua VARCHAR(30) NOT NULL,
+	numero VARCHAR(15) NOT NULL,
+    FOREIGN KEY (idEmpregado) REFERENCES empregado(idEmpregado)
+);
+
+-- DESAFIO 2: Criar uma tabela projeto (nome, prazo, orcamento, descricao). N:N (Gera uma tabela relacionamento)
+-- vide arquivo empresa-tabela-projeto
 
 
 

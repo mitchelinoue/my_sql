@@ -5,7 +5,7 @@
 CREATE DATABASE loja;
 
 USE loja;
- 
+
 CREATE TABLE vendedor (
     idVendedor INTEGER PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(30) NOT NULL,
@@ -117,7 +117,7 @@ SELECT *
 FROM endereco
 	INNER JOIN vendedor 
     ON endereco.idVendedor = vendedor.idVendedor;
-
+ 
 SELECT nome, sobrenome, uf, cidade
 FROM vendedor
 	INNER JOIN endereco 
@@ -135,9 +135,40 @@ FROM vendedor
     ON vendedor.idVendedor = produto.idVendedor
     INNER JOIN endereco
     ON vendedor.idVendedor = endereco.idVendedor;
+    
+SELECT vendedor.nome, produto.nome AS produto, preco, uf
+FROM vendedor
+	INNER JOIN produto
+    ON vendedor.idVendedor = produto.idVendedor
+    INNER JOIN endereco
+    ON vendedor.idVendedor = endereco.idVendedor;
 
+-- listar os produtos em promoção vendidos no ceará
+SELECT produto.nome AS produtoNome, preco, desconto, descontoAte
+FROM vendedor
+	INNER JOIN produto
+    ON vendedor.idVendedor = produto.idVendedor
+    INNER JOIN endereco
+    ON vendedor.idVendedor = endereco.idVendedor
+WHERE desconto > 0.0 AND descontoAte > CURRENT_DATE() AND uf = "CE";
 
+-- listar os produtos com até 50% de desconto em sp
+SELECT *
+FROM vendedor
+	INNER JOIN produto
+    ON vendedor.idVendedor = produto.idVendedor
+    INNER JOIN endereco 
+    ON vendedor.idVendedor = endereco.idVendedor
+WHERE desconto > 0.5 AND uf = "SP";
 
+-- listar os produtos de um vendedor de id = 1
+SELECT vendedor.nome AS vendedor, produto.nome AS nomeProduto, preco
+FROM vendedor
+	INNER JOIN produto
+    ON vendedor.idVendedor = produto.idVendedor
+    INNER JOIN endereco
+    ON vendedor.idVendedor = endereco.idVendedor
+WHERE vendedor.idVendedor = 1;
 
 -- exercícios
 -- Query 1) Listar os produtos com desconto maior que 50;
@@ -157,8 +188,42 @@ SELECT idVendedor FROM endereco WHERE cidade = "Campinas";
 
 
 
+-- alterar tabelas sem dropar - muito perigoso, não faça sem entender as consequências
+ALTER TABLE produto 
+ADD COLUMN precoMinimo DECIMAL(10, 2) NOT NULL DEFAULT(1); -- adiciona coluna
+
+ALTER TABLE produto
+CHANGE precoMinimo preco_Minimo DECIMAL(8, 2) NOT NULL DEFAULT(2); -- altera o nome/atributos de uma coluna (se já existir um valor em dafault o '2' é ignorado)
+
+ALTER TABLE produto
+DROP COLUMN preco_Minimo; -- dropa uma COLUNA de uma tabela
+
+DESC produto; -- descrição da tabela produto
 
 
+
+-- funções de agregação
+SELECT MAX(desconto) FROM produto; -- maior desconto da tabela produto
+SELECT MIN(desconto) FROM produto; -- menor desconto da tabela produto
+SELECT MAX(preco) FROM produto; -- maior preço da tabela produto
+SELECT MIN(preco) FROM produto; -- menor preco da tabela produto
+SELECT AVG(preco) FROM produto; -- média dos preços da tabela produto
+SELECT SUM(preco) FROM produto; -- soma total dos preços da tabela produto
+
+SELECT *
+FROM produto
+WHERE preco = (SELECT MAX(preco) FROM produto); -- subquery retorna o valor exato do maior preço
+
+SELECT *
+FROM produto
+WHERE preco > (SELECT AVG(preco) FROM produto); -- subquery retorna os produtos com preço acima da média
+
+SELECT *
+FROM produto
+WHERE desconto < (SELECT AVG(desconto) FROM produto); -- subquery retorna os produtos com desconto abaixo da média
+
+SELECT AVG(quantidade) FROM produto; -- média de quantidade dos produtos
+SELECT MAX(quantidade) FROM produto; -- prooduto com maior quantidade em estoque
 
 
 
