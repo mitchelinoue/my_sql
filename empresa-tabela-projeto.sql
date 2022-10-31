@@ -67,6 +67,10 @@ FROM rel_empregado_projeto
     ON rel_empregado_projeto.idProjeto = projeto.idProjeto
 WHERE empregado.nome = "Carlos José";
 
+-- resumo cardinalidade (onde vai a fk?)
+-- 1:1 - quem depende de quem (o fraco/dependente recebe fk)
+-- 1:N - sempre o lado n recebe
+-- N:N - sempre irá gerar uma nova tabela com duas fk
 
 
 
